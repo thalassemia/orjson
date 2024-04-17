@@ -17,6 +17,39 @@ pub trait Formatter {
     }
 
     #[inline]
+    fn write_nan<W>(&mut self, writer: &mut W) -> io::Result<()>
+    where
+        W: ?Sized + io::Write + WriteExt,
+    {
+        unsafe {
+            reserve_minimum!(writer);
+            writer.write_reserved_fragment(b"NaN")
+        }
+    }
+
+    #[inline]
+    fn write_pinf<W>(&mut self, writer: &mut W) -> io::Result<()>
+    where
+        W: ?Sized + io::Write + WriteExt,
+    {
+        unsafe {
+            reserve_minimum!(writer);
+            writer.write_reserved_fragment(b"Inf")
+        }
+    }
+
+    #[inline]
+    fn write_ninf<W>(&mut self, writer: &mut W) -> io::Result<()>
+    where
+        W: ?Sized + io::Write + WriteExt,
+    {
+        unsafe {
+            reserve_minimum!(writer);
+            writer.write_reserved_fragment(b"-Inf")
+        }
+    }
+
+    #[inline]
     fn write_bool<W>(&mut self, writer: &mut W, value: bool) -> io::Result<()>
     where
         W: ?Sized + io::Write + WriteExt,
