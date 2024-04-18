@@ -380,13 +380,12 @@ uint32_t yyjson_version(void) {
 #define constcast(type) (type)(void *)(size_t)(const void *)
 
 /* flag test */
-#define has_read_flag(_flag) false
+#define has_read_flag(_flag) unlikely(read_flag_eq(flg, YYJSON_READ_##_flag))
 #define has_write_flag(_flag) unlikely(write_flag_eq(flg, YYJSON_WRITE_##_flag))
 
 static_inline bool read_flag_eq(yyjson_read_flag flg, yyjson_read_flag chk) {
 #if YYJSON_DISABLE_NON_STANDARD
-    if (chk == YYJSON_READ_ALLOW_INF_AND_NAN ||
-        chk == YYJSON_READ_ALLOW_COMMENTS ||
+    if (chk == YYJSON_READ_ALLOW_COMMENTS ||
         chk == YYJSON_READ_ALLOW_TRAILING_COMMAS ||
         chk == YYJSON_READ_ALLOW_INVALID_UNICODE)
         return false; /* this should be evaluated at compile-time */
